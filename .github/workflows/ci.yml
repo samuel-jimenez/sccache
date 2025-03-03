@@ -281,6 +281,11 @@ jobs:
     #            rustc: nightly
     env:
       RUST_BACKTRACE: 1
+      COVERAGE_REPORT_DIR: "target/debug"
+      COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
+      BINARY_DIR: "${COVERAGE_REPORT_DIR}"
+      GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
+      GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -311,21 +316,42 @@ jobs:
           RUSTC_WRAPPER: ""
           RUSTFLAGS: "-Cinstrument-coverage -Ccodegen-units=1 -Copt-level=0 -Coverflow-checks=off"
 
+      - name: Display env
+        env:
+          COVERAGE_REPORT_DIR: "target/debug"
+          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
+          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
+          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
+          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
+        shell: bash
+        run: echo $BINARY_DIR $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
+
+      - name: Display env
+        shell: bash
+        run: echo $BINARY_DIR $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
+
+      - name: Display coverage files
+        env:
+          COVERAGE_REPORT_DIR: "target/debug"
+          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
+          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
+          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
+          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
+        shell: bash
+        run:
+          grcov . -s . --binary-path $BINARY_DIR --output-type files $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION | sort --unique
+
       - name: Generate coverage data (via `grcov`)
+        env:
+          COVERAGE_REPORT_DIR: "target/debug"
+          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
+          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
+          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
+          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
         id: coverage
         shell: bash
         run: |
-          ## Generate coverage data
-          COVERAGE_REPORT_DIR="target/debug"
-          COVERAGE_REPORT_FILE="${COVERAGE_REPORT_DIR}/lcov.info"
-          BINARY_DIR="${COVERAGE_REPORT_DIR}"
-          # GRCOV_IGNORE_OPTION='--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"' ## `grcov` ignores these params when passed as an environment variable (why?)
-          # GRCOV_EXCLUDE_OPTION='--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"' ## `grcov` ignores these params when passed as an environment variable (why?)
-          mkdir -p "${COVERAGE_REPORT_DIR}"
-          # display coverage files
-          grcov . -s . --binary-path $BINARY_DIR --output-type files --ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*" --excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()" | sort --unique
-          # generate coverage report
-          grcov . -s . --binary-path $BINARY_DIR --output-type lcov --output-path "${COVERAGE_REPORT_FILE}" --branch --ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*" --excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"
+          grcov . -s . --binary-path $BINARY_DIR --output-type lcov --output-path "${COVERAGE_REPORT_FILE}" --branch $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
           echo "report=${COVERAGE_REPORT_FILE}" >> $GITHUB_OUTPUT
 
 
@@ -337,6 +363,9 @@ jobs:
           flags: ${{ steps.vars.outputs.CODECOV_FLAGS }}
           name: codecov-umbrella
           fail_ci_if_error: false
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   test_freebsd:
     name: test freebsd-14.1 rust stable
