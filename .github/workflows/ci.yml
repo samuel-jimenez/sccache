@@ -282,8 +282,8 @@ jobs:
     env:
       RUST_BACKTRACE: 1
       COVERAGE_REPORT_DIR: "target/debug"
-      COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
-      BINARY_DIR: "${COVERAGE_REPORT_DIR}"
+      COVERAGE_REPORT_FILE: "${{ env.COVERAGE_REPORT_DIR }}/lcov.info"
+      BINARY_DIR: "${{ env.COVERAGE_REPORT_DIR }}"
       GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
       GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
     steps:
@@ -317,37 +317,15 @@ jobs:
           RUSTFLAGS: "-Cinstrument-coverage -Ccodegen-units=1 -Copt-level=0 -Coverflow-checks=off"
 
       - name: Display env
-        env:
-          COVERAGE_REPORT_DIR: "target/debug"
-          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
-          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
-          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
-          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
         shell: bash
-        run: echo $BINARY_DIR $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
-
-      - name: Display env
-        shell: bash
-        run: echo $BINARY_DIR $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
+        run: echo $COVERAGE_REPORT_DIR $COVERAGE_REPORT_FILE $BINARY_DIR $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION
 
       - name: Display coverage files
-        env:
-          COVERAGE_REPORT_DIR: "target/debug"
-          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
-          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
-          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
-          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
         shell: bash
         run:
           grcov . -s . --binary-path $BINARY_DIR --output-type files $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION | sort --unique
 
       - name: Generate coverage data (via `grcov`)
-        env:
-          COVERAGE_REPORT_DIR: "target/debug"
-          COVERAGE_REPORT_FILE: "${COVERAGE_REPORT_DIR}/lcov.info"
-          BINARY_DIR: "${COVERAGE_REPORT_DIR}"
-          GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
-          GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
         id: coverage
         shell: bash
         run: |
