@@ -288,7 +288,7 @@ jobs:
       COVERAGE_REPORT_DIR: "target/debug"
       COVERAGE_REPORT_FILE: "target/debug/lcov.info"
       BINARY_DIR: "target/debug"
-      GRCOV_IGNORE_OPTION: '--ignore build.rs --ignore "/*" --ignore "[a-zA-Z]:/*"'
+      GRCOV_IGNORE_OPTION: '--ignore "/*" --ignore "[a-zA-Z]:/*"'
       GRCOV_EXCLUDE_OPTION: '--excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"'
     steps:
       - name: Clone repository
