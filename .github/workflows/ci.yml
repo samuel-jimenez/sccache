@@ -348,7 +348,7 @@ jobs:
           ## flags: IntegrationTests, UnitTests, ${{ steps.vars.outputs.CODECOV_FLAGS }}
           flags: ${{ steps.vars.outputs.CODECOV_FLAGS }}
           name: codecov-umbrella
-          fail_ci_if_error: false
+          fail_ci_if_error: true
           # verbose: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
