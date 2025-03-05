@@ -79,6 +79,7 @@ jobs:
             rustc: "1.75.0"
             extra_desc: dist-server
             extra_args: --no-default-features --features=dist-tests test_dist_ -- --test-threads 1
+            no_cover: 1
           - os: ubuntu-20.04
             rustc: stable
           - os: ubuntu-20.04
@@ -153,29 +154,9 @@ jobs:
           toolchain: ${{ matrix.rustc }}
           components: llvm-tools-preview
 
-      - if: ${{ contains(matrix.os, 'ubuntu') }}
-        name: Install gcc & clang for tests
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          set -x
-          # Conflicts with clang-cuda
-          if dpkg -s gcc-14 >/dev/null 2>&1; then
-            sudo apt remove -y gcc-14 g++-14
-            sudo apt autoremove -y
-          fi
-          # Ubuntu20.04's clang-10 is too old for CTK 11+, so install clang-12 instead
-          if test "${{ matrix.os }}" = "ubuntu-20.04" && test -n "${{ matrix.cuda }}"; then
-            sudo apt install -y --no-install-recommends gcc clang-12
-            sudo ln -sf $(which clang-12) /usr/bin/clang
-            sudo ln -sf $(which clang++-12) /usr/bin/clang++
-          else
-            sudo apt install -y --no-install-recommends gcc clang
-          fi
-          echo 'gcc version:'
-          gcc --version
-          echo 'clang version:'
-          clang --version
+      - name: Install gcc & clang for tests
+        run: sudo apt-get install -y clang gcc
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
 
       - if: matrix.cuda != '' && contains(fromJSON('["Linux", "Windows"]'), runner.os)
         name: Install nvcc
