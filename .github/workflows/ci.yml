@@ -115,6 +115,7 @@ jobs:
             allow_failure: true
             extra_args: --features=unstable
             extra_desc: cuda11.8
+            no_cover: 1
           - os: windows-2019
             cuda: "11.8"
             rustc: beta
@@ -125,6 +126,7 @@ jobs:
             rustc: "1.75.0"
             extra_args: --no-fail-fast
             extra_desc: cuda12.8
+            no_cover: 1
           - os: windows-2022
             cuda: "12.8"
             rustc: nightly
@@ -165,9 +167,11 @@ jobs:
           cuda-version: ${{ matrix.cuda }}
 
       - name: "`grcov` ~ install"
+        if: ${{ ! matrix.no_cover }}
         run: cargo install grcov
 
       - name: Create config for testing
+        if: ${{ ! matrix.no_cover }}
         run: |
           mkdir -p .cargo
           echo '[env]
