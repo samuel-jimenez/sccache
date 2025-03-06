@@ -197,15 +197,12 @@ jobs:
           LLVM_PROFILE_FILE = { value = "target/debug/coverage/default-%p-%8m.profraw", relative = true }' >> .cargo/config.toml
 
 
-      - name: Build tests
-        run: cargo test --no-run --locked --all-targets ${{ matrix.extra_args }}
+      - name: Execute tests
+        run: cargo test --locked --all-targets ${{ matrix.extra_args }}
         env:
           CARGO_INCREMENTAL: "0"
           RUSTC_WRAPPER: ""
           RUSTFLAGS: "-Cinstrument-coverage -Ccodegen-units=1 -Copt-level=0 -Coverflow-checks=off"
-
-      - name: Run tests
-        run: cargo test --locked --all-targets ${{ matrix.extra_args }}
 
       - name: Upload failure
         if: failure()
