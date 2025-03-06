@@ -114,7 +114,7 @@ jobs:
             allow_failure: true
             extra_args: --features=unstable
             extra_desc: cuda11.8
-            no_cover: true
+            #no_cover: true
           - os: windows-2019
             cuda: "11.8"
             rustc: beta
@@ -125,7 +125,6 @@ jobs:
             rustc: "1.75.0"
             extra_args: --no-fail-fast
             extra_desc: cuda12.8
-            no_cover: true
           - os: windows-2022
             cuda: "12.8"
             rustc: nightly
@@ -233,7 +232,7 @@ jobs:
           files: ${{ steps.coverage.outputs.report }}
           ## flags: IntegrationTests, UnitTests, ${{ steps.vars.outputs.CODECOV_FLAGS }}
           flags: ${{ steps.vars.outputs.CODECOV_FLAGS }}
-          name: codecov-umbrella-${{ matrix.os }}-rust ${{ matrix.rustc || 'stable' }}-${{ matrix.extra_desc }}
+          name: codecov-umbrella-${{ matrix.os }}-rust_${{ matrix.rustc || 'stable' }}-${{ matrix.extra_desc }}
           fail_ci_if_error: true
           # verbose: true
         env:
