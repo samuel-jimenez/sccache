@@ -225,7 +225,7 @@ jobs:
           files: ${{ steps.coverage.outputs.report }}
           ## flags: IntegrationTests, UnitTests, ${{ steps.vars.outputs.CODECOV_FLAGS }}
           flags: ${{ steps.vars.outputs.CODECOV_FLAGS }}
-          name: codecov-umbrella-${{ matrix.os }}-rust_${{ matrix.rustc || 'stable' }}-${{ matrix.extra_desc }}
+          name: codecov-umbrella-${{ matrix.os }}-${{ matrix.rustc || 'stable' }}-${{ matrix.extra_desc }}
           fail_ci_if_error: true
           # verbose: true
         env:
