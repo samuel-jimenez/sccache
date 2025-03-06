@@ -92,6 +92,14 @@ jobs:
             extra_args: --no-default-features --features=dist-tests test_dist_ -- --test-threads 1
           - os: macos-13
             rustc: nightly
+            # # M1 CPU
+          - os: macos-14
+          - os: windows-2019
+            cuda: "11.1"
+            # Oldest supported version, keep in sync with README.md
+            rustc: "1.75.0"
+            extra_args: --no-fail-fast
+            extra_desc: cuda11.1
     # Disable on Windows for now as it fails with:
     # found invalid metadata files for crate `vte_generate_state_changes`
     #          - os: windows-2019
