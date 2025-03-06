@@ -74,7 +74,6 @@ jobs:
             extra_desc: cuda11.1
             # Oldest supported version, keep in sync with README.md
             rustc: "1.75.0"
-            no_cover: true
           - os: ubuntu-22.04
             # Oldest supported version, keep in sync with README.md
             rustc: "1.75.0"
@@ -84,28 +83,23 @@ jobs:
             rustc: stable
           - os: ubuntu-20.04
             rustc: beta
-            no_cover: true
           - os: ubuntu-20.04
             rustc: nightly
             allow_failure: true
             extra_args: --features=unstable
-            no_cover: true
           - os: ubuntu-20.04
             extra_desc: no-default-features
             extra_args: --no-default-features
             allow_failure: true
-            no_cover: true
           - os: ubuntu-22.04
             cuda: "11.8"
             extra_desc: cuda11.8
-            no_cover: true
           - os: ubuntu-24.04
             cuda: "12.8"
             # Oldest supported version, keep in sync with README.md
             rustc: "1.75.0"
             extra_desc: cuda12.8
           - os: macos-13
-            no_cover: true
           # # M1 CPU
           - os: macos-14
           - os: windows-2019
@@ -120,6 +114,7 @@ jobs:
             allow_failure: true
             extra_args: --features=unstable
             extra_desc: cuda11.8
+            #no_cover: true
           - os: windows-2019
             cuda: "11.8"
             rustc: beta
