@@ -129,6 +129,7 @@ jobs:
             cuda: "12.8"
             rustc: beta
             extra_desc: cuda12.8
+            no_coverage: true
     env:
       RUST_BACKTRACE: 1
       COVERAGE_REPORT_DIR: "target/debug"
