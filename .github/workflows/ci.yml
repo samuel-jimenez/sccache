@@ -107,7 +107,7 @@ jobs:
             allow_failure: true
             extra_args: --features=unstable
             extra_desc: cuda11.8
-            #no_cover: true
+            no_cover: true
           - os: windows-2019
             cuda: "11.8"
             rustc: beta
