@@ -93,6 +93,7 @@ jobs:
             rustc: "1.75.0"
             extra_desc: cuda12.8
           - os: macos-13
+            no_coverage: true
           # # M1 CPU
           - os: macos-14
           - os: windows-2019
@@ -107,7 +108,7 @@ jobs:
             allow_failure: true
             extra_args: --features=unstable
             extra_desc: cuda11.8
-            no_cover: true
+            no_coverage: true
           - os: windows-2019
             cuda: "11.8"
             rustc: beta
@@ -171,11 +172,11 @@ jobs:
           cuda-version: ${{ matrix.cuda }}
 
       - name: "`grcov` ~ install"
-        if: ${{ ! matrix.no_cover }}
+        if: ${{ ! matrix.no_coverage }}
         run: cargo install grcov
 
       - name: Create config for testing
-        if: ${{ ! matrix.no_cover }}
+        if: ${{ ! matrix.no_coverage }}
         run: |
           mkdir -p .cargo
           echo '[env]
@@ -197,13 +198,13 @@ jobs:
 
   # coverage:
       - name: Display coverage files
-        if: ${{ ! matrix.no_cover }}
+        if: ${{ ! matrix.no_coverage }}
         shell: bash
         run:
           grcov . -s . --binary-path $BINARY_DIR --output-type files $GRCOV_IGNORE_OPTION $GRCOV_EXCLUDE_OPTION | sort --unique
 
       - name: Generate coverage data (via `grcov`)
-        if: ${{ ! matrix.no_cover }}
+        if: ${{ ! matrix.no_coverage }}
         id: coverage
         shell: bash
         run: |
@@ -212,7 +213,7 @@ jobs:
           echo "report=${COVERAGE_REPORT_FILE}" >> $GITHUB_OUTPUT
 
       - name: Upload coverage results (to Codecov.io)
-        if: ${{ ! matrix.no_cover }}
+        if: ${{ ! matrix.no_coverage }}
         uses: codecov/codecov-action@v5
         with:
           files: ${{ steps.coverage.outputs.report }}
