@@ -353,4 +353,24 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn parse_test_check_init_syslog() {
+        check_init_syslog(
+            "sccache-test",
+            "error,sccache-test=debug,sccache-ignore=off",
+        );
+        debug!("message");
+        trace!(target: "sccache-ignore", "ignored message");
+        let args = vec![EXE, "scheduler", "--syslog"];
+        // sccache-scheduler
+        // assert_args_parse_to_auth(args, AuthSubcommand::Base64 { num_bytes: 256 / 8 });
+    }
+
+    // #[test]
+    // fn scheduler_test_syslog() {
+    //     let args = vec![EXE, "scheduler", "--syslog"];
+    //     // sccache-scheduler
+    //     assert_args_parse_to_auth(args, AuthSubcommand::Base64 { num_bytes: 256 / 8 });
+    // }
 }
