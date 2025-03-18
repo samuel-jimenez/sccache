@@ -1060,6 +1060,7 @@ counted_array!(static ARGS: [ArgInfo<ArgData>; _] = [
     take_arg!("-Z", ArgUnstable, CanBeSeparated, Unstable),
     take_arg!("-l", ArgLinkLibrary, CanBeSeparated, LinkLibrary),
     take_arg!("-o", PathBuf, CanBeSeparated, TooHardPath),
+    flag!("-vV", NotCompilationFlag),
 ]);
 
 fn parse_arguments(arguments: &[OsString], cwd: &Path) -> CompilerArguments<ParsedArguments> {
