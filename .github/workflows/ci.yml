@@ -187,6 +187,12 @@ jobs:
         with:
           name: test-${{ matrix.os }}-${{ matrix.rustc || 'stable' }}-${{ matrix.extra_desc }}
 
+      - name: "`sccache` ~ show log"
+        if: always()
+        run: cat /tmp/sccache_local_daemon.txt
+        continue-on-error: true
+
+
   build:
     name: build ${{ matrix.binary || 'sccache' }} ${{ matrix.target }}
     runs-on: ${{ matrix.os }}

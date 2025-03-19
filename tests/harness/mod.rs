@@ -35,7 +35,7 @@ const DIST_SERVER_TOKEN: &str = "THIS IS THE TEST TOKEN";
 
 const CONFIGS_CONTAINER_PATH: &str = "/sccache-bits";
 const BUILD_DIR_CONTAINER_PATH: &str = "/sccache-bits/build-dir";
-const SCHEDULER_PORT: u16 = 10500;
+const SCHEDULER_PORT: u16 = 10700;
 const SERVER_PORT: u16 = 12345; // arbitrary
 
 const TC_CACHE_SIZE: u64 = 1024 * 1024 * 1024; // 1 gig
@@ -43,15 +43,19 @@ const TC_CACHE_SIZE: u64 = 1024 * 1024 * 1024; // 1 gig
 pub fn start_local_daemon(cfg_path: &Path, cached_cfg_path: &Path) {
     // Don't run this with run() because on Windows `wait_with_output`
     // will hang because the internal server process is not detached.
+    println!(
+        "Log at: {:?}",
+        env::temp_dir().join("sccache_local_daemon.txt")
+    );
     if !sccache_command()
         .arg("--start-server")
         // Uncomment following lines to debug locally.
-        // .env("SCCACHE_LOG", "sccache=trace")
-        // .env("RUST_LOG_STYLE", "never")
-        // .env(
-        //     "SCCACHE_ERROR_LOG",
-        //     env::temp_dir().join("sccache_local_daemon.txt"),
-        // )
+        .env("SCCACHE_LOG", "sccache=trace")
+        .env("RUST_LOG_STYLE", "never")
+        .env(
+            "SCCACHE_ERROR_LOG",
+            env::temp_dir().join("sccache_local_daemon.txt"),
+        )
         .env("SCCACHE_CONF", cfg_path)
         .env("SCCACHE_CACHED_CONF", cached_cfg_path)
         .status()
